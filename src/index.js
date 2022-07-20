@@ -38,6 +38,7 @@ class ToDoList {
         this.renderList();
     }
 
+    // eslint-disable-next-line class-methods-use-this
     renderList() {
         const list = document.querySelector('.notes__list');
         list.innerHTML = '';
@@ -57,7 +58,7 @@ class ToDoList {
             }
 
             const result = values.map(item => {
-                let res = item
+                let res = item;
                 res = JSON.parse(item);
                 return res;
             });
@@ -125,14 +126,17 @@ class ToDoList {
         }
     }
 
+    // eslint-disable-next-line class-methods-use-this
     checkUnique(noteTitle) {
         return !Object.keys(localStorage).find(note => note === noteTitle);
     }
 
+    // eslint-disable-next-line class-methods-use-this
     deleteNote(noteTitle) {
         localStorage.removeItem(noteTitle);
     }
 
+    // eslint-disable-next-line class-methods-use-this
     toggleIsDone(noteTitle) {
         const task = JSON.parse(localStorage.getItem(noteTitle));
         if (task.isDone === true) {
