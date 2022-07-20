@@ -51,15 +51,15 @@ class ToDoList {
         function allStorage() {
             const values = [];
             const keys = Object.keys(localStorage);
-            let i = keys.length;
 
-            while ( i-- ) {
+            for (let i = 0; i < keys.length; i++) {
                 values.push( localStorage.getItem(keys[i]) );
             }
 
             const result = values.map(item => {
-                item = JSON.parse(item);
-                return item;
+                let res = item
+                res = JSON.parse(item);
+                return res;
             });
 
             return result;
@@ -143,6 +143,5 @@ class ToDoList {
         localStorage.setItem(noteTitle, JSON.stringify(task));
     }
 }
-
 // eslint-disable-next-line no-unused-vars
 const myToDoList = new ToDoList();
