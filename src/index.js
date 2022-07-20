@@ -1,5 +1,14 @@
+const indexNotFound = -1;
+const deleteOneIndex = 1;
+
 class ToDoList {
+    noteList = [];
+
     constructor() {
+        if (localStorage.getItem('noteList')) {
+            this.noteList = JSON.parse(localStorage.getItem('noteList'));
+        }
+
         const form = document.querySelector('.form');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -38,7 +47,6 @@ class ToDoList {
         this.renderList();
     }
 
-    // eslint-disable-next-line class-methods-use-this
     renderList() {
         const list = document.querySelector('.notes__list');
         list.innerHTML = '';
@@ -49,26 +57,7 @@ class ToDoList {
         const listDone = document.createElement('ul');
         listDone.classList.add('notes__list_done');
 
-        function allStorage() {
-            const values = [];
-            const keys = Object.keys(localStorage);
-
-            for (let i = 0; i < keys.length; i++) {
-                values.push( localStorage.getItem(keys[i]) );
-            }
-
-            const result = values.map(item => {
-                let res = item;
-                res = JSON.parse(item);
-                return res;
-            });
-
-            return result;
-        }
-
-        const NotesStorage = allStorage();
-
-        for (const note of NotesStorage) {
+        for (const note of this.noteList) {
             const listItem = document.createElement('li');
             listItem.classList.add('notes__item');
             listItem.setAttribute('id', `${note.title}`);
@@ -106,6 +95,8 @@ class ToDoList {
             }
         }
         list.append(listTodo, listDone);
+
+        localStorage.setItem('noteList', JSON.stringify(this.noteList));
     }
 
     addNote(noteTitle, noteText) {
@@ -122,29 +113,28 @@ class ToDoList {
                 isDone: false
             };
 
-            localStorage.setItem(noteTitle, JSON.stringify(note));
+            this.noteList.push(note);
         }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     checkUnique(noteTitle) {
-        return !Object.keys(localStorage).find(note => note === noteTitle);
+        return !this.noteList.find(note => note.title === noteTitle);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     deleteNote(noteTitle) {
-        localStorage.removeItem(noteTitle);
+        const deleteIndex = this.noteList.findIndex(note => note.title === noteTitle);
+
+        if (deleteIndex !== indexNotFound) {
+            this.noteList.splice(deleteIndex, deleteOneIndex);
+        }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     toggleIsDone(noteTitle) {
-        const task = JSON.parse(localStorage.getItem(noteTitle));
-        if (task.isDone === true) {
-            task.isDone = false;
-        } else {
-            task.isDone = true;
+        const index = this.noteList.findIndex(note => note.title === noteTitle);
+
+        if (index !== indexNotFound) {
+            this.noteList[index].isDone = !this.noteList[index].isDone;
         }
-        localStorage.setItem(noteTitle, JSON.stringify(task));
     }
 }
 // eslint-disable-next-line no-unused-vars
